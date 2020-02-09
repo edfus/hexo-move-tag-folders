@@ -1,0 +1,18 @@
+{
+  "_location": "/hexo-move-tag-folders",
+  "_requiredBy": [
+    "/"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "hexo-move-tag-folders",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "name": "hexo-move-tag-folders",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edfus/hexo-move-tag-folders.git"
+  },
+  "version": "1.0.0"
+}
