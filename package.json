@@ -1,5 +1,15 @@
 {
+  "_from": "git+https://github.com/edfus/hexo-move-tag-folders.git",
+  "_id": "hexo-move-tag-folders@1.0.0",
   "_location": "/hexo-move-tag-folders",
+  "_requested": {
+    "type": "git",
+    "raw": "git+https://github.com/edfus/hexo-move-tag-folders.git",
+    "rawSpec": "git+https://github.com/edfus/hexo-move-tag-folders.git",
+    "saveSpec": "git+https://github.com/edfus/hexo-move-tag-folders.git",
+    "fetchSpec": "https://github.com/edfus/hexo-move-tag-folders.git",
+    "gitCommittish": null
+  },
   "_requiredBy": [
     "/"
   ],
