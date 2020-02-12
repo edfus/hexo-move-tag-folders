@@ -1,7 +1,16 @@
 {
+  "_args": [
+    [
+      "git+https://github.com/edfus/hexo-move-tag-folders.git",
+      "Z:\\git_depository\\hexo_blog_2019"
+    ]
+  ],
   "_from": "git+https://github.com/edfus/hexo-move-tag-folders.git",
-  "_id": "hexo-move-tag-folders@1.0.0",
+  "_id": "hexo-move-tag-folders@git+https://github.com/edfus/hexo-move-tag-folders.git#d075bb961d0734e7cbe7c803443b7b2b81adc632",
+  "_inBundle": false,
+  "_integrity": "",
   "_location": "/hexo-move-tag-folders",
+  "_phantomChildren": {},
   "_requested": {
     "type": "git",
     "raw": "git+https://github.com/edfus/hexo-move-tag-folders.git",
@@ -13,16 +22,23 @@
   "_requiredBy": [
     "/"
   ],
+  "_resolved": "git+https://github.com/edfus/hexo-move-tag-folders.git#d075bb961d0734e7cbe7c803443b7b2b81adc632",
+  "_spec": "git+https://github.com/edfus/hexo-move-tag-folders.git",
+  "_where": "Z:\\git_depository\\hexo_blog_2019",
+  "bugs": {
+    "url": "https://github.com/edfus/hexo-move-tag-folders/issues"
+  },
+  "description": "this plugin is designed for moving the tag folders in `hexo.config.tag_dir`(the config.yml in hexo folder (not the theme's!)) to `hexo.config.category_dir/category.name` which the tag related to.",
+  "homepage": "https://github.com/edfus/hexo-move-tag-folders#readme",
   "license": "MIT",
   "main": "index.js",
-  "name": "hexo-move-tag-folders",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "name": "hexo-move-tag-folders",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/edfus/hexo-move-tag-folders.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "version": "1.0.0"
 }

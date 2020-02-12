@@ -76,20 +76,26 @@ function tagHrefChange(){
 
         $('a[rel=tag]').each(function(){
           if ($(this).attr('href')){
-            var href = $(this).attr('href').substring($(this).attr('href').length -1, 0);
-            let tagName = href.substring(href.length, href.lastIndexOf('/')+1);
-            categoriesInfo.some(function(category){
-              for(var i = 0; i < category.tags.length; i++ ){
-                // console.log(`${encodeURI(category.tags[i].name)} && ${tagName}`);
-                if(encodeURI(category.tags[i].name) == tagName){
-                  href = `/${hexo.config.category_dir}/${category.name}/${tagName}`;
-                  return true;
+            if($(this).attr('href').substring($(this).attr('href').length, 1).substring($(this).attr('href').indexOf('/') -1, 0)=='tags'){
+              var href = $(this).attr('href').substring($(this).attr('href').length -1, 0);
+              let tagName = href.substring(href.length, href.lastIndexOf('/')+1);
+              categoriesInfo.some(function(category){
+                for(var i = 0; i < category.tags.length; i++ ){
+                  // console.log(`${encodeURI(category.tags[i].name)} && ${tagName}`);
+                  if(category.tags[i].name == tagName){
+                    href = `/${hexo.config.category_dir}/${category.name}/${tagName}`;
+                    return true;
+                  }else if(encodeURI(category.tags[i].name) == tagName)
+                  {
+                    href = `/${hexo.config.category_dir}/${category.name}/${category.tags[i].name}`;
+                    return true;
+                  }
                 }
-              }
-            })
-            if(href !== $(this).attr('href').substring($(this).attr('href').length -1, 0))
-                $(this).attr('href', `${href}`);
-            else;// console.log(`irregular href format: ${href},${$(this).attr('href')}`);
+              })
+              if(href !== $(this).attr('href').substring($(this).attr('href').length -1, 0))
+                  $(this).attr('href', `${href}`);
+              else console.log(`irregular href format: ${href},${$(this).attr('href')},${tagName}`);
+            }
           }else{
             console.info&&console.info("no href attr, skipped...");
             // console.info&&console.info($(this));
