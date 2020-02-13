@@ -28,15 +28,10 @@ hexo.extend.filter.register('before_exit', function(data){
 },11);
 
 function indexPagesNum(path,num){
-  var exist;
-  (function(){  fs.exists(`public${path}/page/${num}`, function(exists){
-    exist = exists;
-  })})();
-
-  if(!exist)
-     return num-1;
-  else
-     return indexPagesNum(path,num+1);
+    if(fs.existsSync(`public${path}/page/${num}`))   
+       return indexPagesNum(path,num+1);
+    else
+       return num;
 }
 
 function tagHrefChange(){
@@ -52,20 +47,21 @@ function tagHrefChange(){
 
   pageLink.push('index.html');
 
-  for(var i = indexPagesNum('',2); i > 1; i-- ){
-    pageLink.push(`public/page/${i}/index.html`);
+  for(var i = indexPagesNum('',2) - 1; i > 1; i-- ){
+    pageLink.push(`page/${i}/index.html`);
   }
 
   pageLink.push(`${hexo.config.more_path}/index.html`);
 
-  for(var i = indexPagesNum(hexo.config.more_path,2); i > 1; i-- ){
-    pageLink.push(`public${hexo.config.more_path}/page/${i}/index.html`);
+  for(var j = indexPagesNum(hexo.config.more_path,2) - 1; j > 1; j-- ){
+    var str = `${hexo.config.more_path}/page/${j}/index.html`;
+    pageLink.push(str.substring(str.length,1));
   }
 
   var links = postLinks.concat(indexLinks).concat(pageLink);
 
   links.forEach(function(link){
-    fs.readFile('public/'+link, [], function(err,data){  if(err){  //console.log("读取文件fail " + err);
+    fs.readFile('public/'+link, [], function(err,data){  if(err){  console.log("读取文件fail " + err);
                                                                                                         return'';} else {
         var $ = cheerio.load(data, {
           ignoreWhitespace: false,
@@ -76,7 +72,8 @@ function tagHrefChange(){
 
         $('a[rel=tag]').each(function(){
           if ($(this).attr('href')){
-            if($(this).attr('href').substring($(this).attr('href').length, 1).substring($(this).attr('href').indexOf('/') -1, 0)=='tags'){
+            var str = $(this).attr('href').substring($(this).attr('href').length, 1);
+            if(str.substring(str.indexOf('/'), 0)=='tags'){
               var href = $(this).attr('href').substring($(this).attr('href').length -1, 0);
               let tagName = href.substring(href.length, href.lastIndexOf('/')+1);
               categoriesInfo.some(function(category){
@@ -95,11 +92,17 @@ function tagHrefChange(){
               if(href !== $(this).attr('href').substring($(this).attr('href').length -1, 0))
                   $(this).attr('href', `${href}`);
               else console.log(`irregular href format: ${href},${$(this).attr('href')},${tagName}`);
-            }
+            }else if(str.substring(str.indexOf('/'), 0)=='categories');
+            else console.log(str.substring(str.indexOf('/'), 0));
           }else{
             console.info&&console.info("no href attr, skipped...");
             // console.info&&console.info($(this));
           }
+        });
+
+        $('li[article-info=e23]>p').each(function(){
+          $(this).html($(this).html().replace(/=e23=/g, ''));
+          // console.log($(this).text());
         });
         data = $.html();
     fs.writeFile('public/'+link,data, [], function(err){  if(err)  console.log("写入文件fail " + err);  else ;})
