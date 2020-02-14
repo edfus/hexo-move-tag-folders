@@ -17,11 +17,14 @@ if(data.published){
 
 hexo.extend.filter.register('before_exit', function(data){
   var moveTags = function (exists) {
-    if(exists==false)
+    if(!exists)
       return '';
-    else{
-      categorysTagsAdd();
-   }
+    else if(!fs.existsSync(`public/${hexo.config.tag_dir}/--tagsFolderOperated--`)){ 
+          // (async function(){
+            categorysTagsAdd();
+            fs.mkdirsSync(`public/${hexo.config.tag_dir}/--tagsFolderOperated--`);  
+          // }())
+    }
   };
 
   fs.exists(`public/${hexo.config.tag_dir}`, moveTags);
@@ -40,7 +43,7 @@ function tagHrefChange(){
   categoriesInfo.forEach(function(category){
       pageLink.push(`${hexo.config.category_dir}/${category.name}/index.html`);
       category.tags.forEach(function(tag){
-        pageLink.push(`${hexo.config.category_dir}/${category.name}/${tag.name}/index.html`);
+        // pageLink.push(`${hexo.config.category_dir}/${category.name}/${tag.name}/index.html`);
         pageLink.push(`${hexo.config.tag_dir}/${tag.name}/index.html`);
       })
   })
@@ -51,7 +54,7 @@ function tagHrefChange(){
     pageLink.push(`page/${i}/index.html`);
   }
 
-  pageLink.push(`${hexo.config.more_path}/index.html`);
+  pageLink.push(`${hexo.config.more_path}/index.html`.substring(`${hexo.config.more_path}/index.html`.length,1));
 
   for(var j = indexPagesNum(hexo.config.more_path,2) - 1; j > 1; j-- ){
     var str = `${hexo.config.more_path}/page/${j}/index.html`;
@@ -89,20 +92,31 @@ function tagHrefChange(){
                   }
                 }
               })
-              if(href !== $(this).attr('href').substring($(this).attr('href').length -1, 0))
-                  $(this).attr('href', `${href}`);
-              else console.log(`irregular href format: ${href},${$(this).attr('href')},${tagName}`);
+              if(href !== $(this).attr('href').substring($(this).attr('href').length -1, 0)){
+                $(this).attr('href', `${href}/`);
+                // console.log($(this).attr('href'));
+              }
+              else console.log(`irregular href format ${href} or ${tagName} doesn't exist!`);
             }else if(str.substring(str.indexOf('/'), 0)=='categories');
-            else console.log(str.substring(str.indexOf('/'), 0));
+            else console.log(`irregular href format:${str.substring(str.indexOf('/'), 0)}`);
           }else{
             console.info&&console.info("no href attr, skipped...");
             // console.info&&console.info($(this));
           }
         });
 
-        $('li[article-info=e23]>p').each(function(){
+        $('span[article-info=e23]>p').each(function(){
           $(this).html($(this).html().replace(/=e23=/g, ''));
           // console.log($(this).text());
+        });
+        $('div.article-cover').each(function(){
+          var style = `radial-gradient(ellipse closest-side, #FDFBF99f, #FDFBF8) right no-repeat, url(${$(this).attr('article-cover')}) right no-repeat;`
+          if($(this).attr('article-display')=='focus'){
+             $(this).css('width','100%');
+             $(this).css('height','100%');        
+             style = `radial-gradient(ellipse closest-side, #FDFBF93f, #FDFBF8) right no-repeat, url(${$(this).attr('article-cover')}) right no-repeat;`    
+          }
+          $(this).css("background",style);
         });
         data = $.html();
     fs.writeFile('public/'+link,data, [], function(err){  if(err)  console.log("写入文件fail " + err);  else ;})
@@ -110,8 +124,8 @@ function tagHrefChange(){
   })
 }
 
-async function categorysTagsAdd(){
-  await fs.readFile(hexo.database.options.path, [], function(err,data){  if(err)  console.log("读取文件fail " + err);  else {
+function categorysTagsAdd(){
+  fs.readFile(hexo.database.options.path, [],function(err,data){  if(err)  console.log("读取文件fail " + err);  else {
     var result = JSON.parse(data);
       result.models.Category.forEach( function(Category){
         var category ={
@@ -148,15 +162,20 @@ async function categorysTagsAdd(){
           })
         })
       });
-
       categoriesInfo.forEach(function(category){    
           category.tags = deteleRepeatedObject(category.tags);
-          console.log(operateFolders(category));
       });
       tagHrefChange();
+      setTimeout(()=>{   
+        setTimeout(()=>{   
+          setTimeout(()=>{   
+        categoriesInfo.forEach(function(category){    
+          console.log(operateFolders(category));
+        });
+          },0)
+        },0)
+      },0)
   }});
-  
-  
 } //categoriesInfo: 一个category对象的数组，每个category对象包含其name、id、tag对象的数组,tag对象包含name和id
 
 function deteleRepeatedObject(obj) {
@@ -190,12 +209,15 @@ function operateFolders(tagsOfThisCategory){
     return '';
 
   var result = [];
-  result.push(`${tagsOfThisCategory.name}'s tags:`);
+  result.push(`${tagsOfThisCategory.name}'s tags operated:`);
 
   tagsOfThisCategory.tags.forEach(function(tag){
     fs.copyDir(`public/${hexo.config.tag_dir}/${tag.name}`, `public/${hexo.config.category_dir}/${tagsOfThisCategory.name}/${tag.name}`, {},function(info){
-        if( info == null)
-          fs.rmdir(`public/${hexo.config.tag_dir}/${tag.name}`);      
+        if( info == null){
+          fs.rmdirSync(`public/${hexo.config.tag_dir}/${tag.name}`);  
+          // result.push(`${tag.name}`);
+        }
+        else console.log(info);       
     });
     result.push(`${tag.name}`);
   });
