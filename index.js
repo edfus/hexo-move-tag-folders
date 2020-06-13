@@ -111,12 +111,13 @@ function tagHrefChange(){
         });
         $('div.article-cover').each(function(){
           var style = `radial-gradient(ellipse closest-side, #FDFBF99f, #FDFBF8) right no-repeat, url(${$(this).attr('article-cover')}) right no-repeat;`
-          if($(this).attr('article-display')=='focus'){
-             $(this).css('width','100%');
-             $(this).css('height','100%');        
-             style = `radial-gradient(ellipse closest-side, #FDFBF93f, #FDFBF8) right no-repeat, url(${$(this).attr('article-cover')}) right no-repeat;`    
-          }
+          // if($(this).attr('article-display')=='focus'){
+          //    $(this).css('width','100%');
+          //    $(this).css('height','100%');        
+          //    style = `radial-gradient(ellipse closest-side, #FDFBF93f, #FDFBF8) right no-repeat, url(${$(this).attr('article-cover')}) right no-repeat;`    
+          // }
           $(this).css("background",style);
+          $(this).css("backgroundSize",'cover');
         });
         data = $.html();
     fs.writeFile('public/'+link,data, [], function(err){  if(err)  console.log("写入文件fail " + err);  else ;})
