@@ -85,8 +85,7 @@ function tagHrefChange(){
                   if(category.tags[i].name == tagName){
                     href = `/${hexo.config.category_dir}/${category.name}/${tagName}`;
                     return true;
-                  }else if(encodeURI(category.tags[i].name) == tagName)
-                  {
+                  }else if(encodeURI(category.tags[i].name) == tagName){
                     href = `/${hexo.config.category_dir}/${category.name}/${category.tags[i].name}`;
                     return true;
                   }
@@ -107,6 +106,7 @@ function tagHrefChange(){
 
         $('span[article-info=e23]>p').each(function(){
           $(this).html($(this).html().replace(/=e23=/g, ''));
+          $(this).removeAttr('article-info');
           // console.log($(this).text());
         });
         $('div.article-cover').each(function(){
